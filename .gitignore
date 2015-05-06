@@ -1,0 +1,4 @@
+# OS Meta files
+.DS_Store
+# Composer files
+/vendor
