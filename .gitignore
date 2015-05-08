@@ -2,5 +2,5 @@
 .DS_Store
 # Composer files
 /vendor
-# Lunchbot
+# Config
 config.php
