@@ -1,4 +1,4 @@
-#!/usr/local/Cellar/php55/5.5.19/bin/php
+#!/usr/bin/php
 <?php
 require 'config.php';
 require 'fugly-restaurant-crawlr.php';
@@ -28,18 +28,6 @@ function postMessage()
 	$restaurants = crawlAll();
 	$message = buildMessageText($restaurants);
 
-
-	/* Possible Slack options
-		token=2TmtCrHesbzpTpYf1fHOpBrm
-		team_id=T0001
-		channel_id=C2147483705
-		channel_name=test
-		user_id=U2147483697
-		user_name=Steve
-		command=/weather
-		text=94070
-	 */
-
 	$data = json_encode(array(
 		"channel"       =>  SLACK_CHANNEL,
 		"username"      =>  SLACK_BOT_NAME,
@@ -61,18 +49,7 @@ function postMessage()
 function buildMessageText($restaurants, $showWelcome = true)
 {
 	$output = '';
-	$eaters = array(
-		':information_desk_person:',
-		':japanese_goblin:',
-		':japanese_ogre:',
-		':ok_woman:',
-		':spacia:',
-		':anto:',
-		':happyman:',
-		':octopus_hangouts:',
-		':mart:',
-		':pacman:',
-	);
+	$eaters = explode(FORMAT_EATERS, ',');
 
 	$welcomeTexts = array(
 		'Are you feeling Hungary?',
@@ -101,14 +78,9 @@ function formatRestaurant($restaurant = array())
 
 	foreach ($restaurant['meals'] as $meal) {
 
-		if(isset($meal['title']))
-		{
-			$output .= $meal['title'] . "\n";
-		}
-
 		if(isset($meal['description']))
 		{
-			$output .= ':lunch_bullet: '. trim(strip_tags($meal['description']));
+			$output .= FORMAT_LUNCH_BULLET .' '. trim(strip_tags($meal['description']));
 		}
 
 		$output .= "\n";
