@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 require 'config.php';
-require 'fugly-restaurant-crawlr.php';
+require 'crawl.php';
 
 if(!defined('SLACK_ENDPOINT')) return;
 
@@ -25,7 +25,7 @@ function postMessage()
 		':fries:',
 		':bread:'
 	);
-	$restaurants = crawlAll();
+	$restaurants = crawl();
 	$message = buildMessageText($restaurants);
 
 	$data = json_encode(array(
@@ -36,14 +36,16 @@ function postMessage()
 	), JSON_UNESCAPED_UNICODE);
 
 	$ch = curl_init($slackEndpoint);
-	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-	curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
-	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt_array($ch, array(
+		CURLOPT_CUSTOMREQUEST => "POST",
+		CURLOPT_HTTPHEADER => array('Content-Type:application/json'),
+		CURLOPT_POSTFIELDS => $data,
+		CURLOPT_RETURNTRANSFER => true
+	));
 	$result = curl_exec($ch);
 	curl_close($ch);
 
-	return $result;
+	return 'Slack response: '. $result;
 }
 
 function buildMessageText($restaurants, $showWelcome = true)
