@@ -82,7 +82,7 @@ function formatRestaurant($restaurant = array())
 
 		if(isset($meal['description']))
 		{
-			$output .= FORMAT_LUNCH_BULLET .' '. trim(strip_tags($meal['description']));
+			$output .= FORMAT_LUNCH_BULLET .' '. str_replace(array("\r", "\n"), '', trim(strip_tags($meal['description'])));
 		}
 
 		$output .= "\n";
