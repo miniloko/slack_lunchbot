@@ -51,7 +51,7 @@ function postMessage()
 function buildMessageText($restaurants, $showWelcome = true)
 {
 	$output = '';
-	$eaters = explode(FORMAT_EATERS, ',');
+	$eaters = explode(',', FORMAT_EATERS);
 
 	$welcomeTexts = array(
 		'Are you feeling Hungary?',
