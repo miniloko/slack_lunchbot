@@ -35,15 +35,19 @@ function postMessage()
 		"icon_emoji"    =>  $icons[array_rand($icons)]
 	), JSON_UNESCAPED_UNICODE);
 
-	$ch = curl_init($slackEndpoint);
-	curl_setopt_array($ch, array(
-		CURLOPT_CUSTOMREQUEST => "POST",
-		CURLOPT_HTTPHEADER => array('Content-Type:application/json'),
-		CURLOPT_POSTFIELDS => $data,
-		CURLOPT_RETURNTRANSFER => true
-	));
-	$result = curl_exec($ch);
-	curl_close($ch);
+	if(!defined('DEBUG_LOCAL') || (constant('DEBUG_LOCAL') === false)) {
+		$ch = curl_init($slackEndpoint);
+		curl_setopt_array($ch, array(
+			CURLOPT_CUSTOMREQUEST => "POST",
+			CURLOPT_HTTPHEADER => array('Content-Type:application/json'),
+			CURLOPT_POSTFIELDS => $data,
+			CURLOPT_RETURNTRANSFER => true
+		));
+		$result = curl_exec($ch);
+		curl_close($ch);
+	} else {
+		error_log($message);
+	}
 
 	return 'Slack response: '. $result;
 }
