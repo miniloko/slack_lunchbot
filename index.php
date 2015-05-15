@@ -26,6 +26,11 @@ function postMessage()
 		':bread:'
 	);
 	$restaurants = crawl();
+
+	if (count($restaurants) === 0) {
+		return 'Bot response: No restaurant results from crawler';
+	}
+
 	$message = buildMessageText($restaurants);
 
 	$data = json_encode(array(

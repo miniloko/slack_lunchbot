@@ -40,7 +40,11 @@ function loadResturant($restaurant)
 		if (function_exists($function))
 		{
 			return call_user_func($function);
+		} else {
+			print "Could not find function '$function' in '$file'\n";
 		}
+	} else {
+		print "Tried to load '$file' but could not\n";
 	}
 
 	return false;
