@@ -33,6 +33,8 @@ function postMessage()
 
 	$message = buildMessageText($restaurants);
 
+	$result = false;
+
 	$data = json_encode(array(
 		"channel"       =>  SLACK_CHANNEL,
 		"username"      =>  SLACK_BOT_NAME,
@@ -51,10 +53,11 @@ function postMessage()
 		$result = curl_exec($ch);
 		curl_close($ch);
 	} else {
+		$result = 'Local enabled. No Slack request sent';
 		error_log($message);
 	}
 
-	return 'Slack response: '. $result;
+	return 'Slack response: '. ($result ? $result : 'No response from Slack');
 }
 
 function buildMessageText($restaurants, $showWelcome = true)
