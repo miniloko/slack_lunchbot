@@ -31,7 +31,8 @@ function crawl()
 function loadResturant($restaurant)
 {
 	$pieces = mb_split('/', $restaurant);
-	$file = 'restaurants/'. mb_convert_case(implode('/', $pieces), MB_CASE_LOWER, 'UTF-8').'.php';
+	$currDir = dirname(__FILE__);
+	$file = $currDir.DIRECTORY_SEPARATOR.'restaurants'.DIRECTORY_SEPARATOR. mb_convert_case(implode(DIRECTORY_SEPARATOR, $pieces), MB_CASE_LOWER, 'UTF-8').'.php';
 	$function = mb_convert_case(implode('_', $pieces), MB_CASE_LOWER, 'UTF-8');
 
 	if (file_exists($file))
