@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
-require 'config.php';
-require 'crawl.php';
+require_once 'config.php';
+require_once 'crawl.php';
 
 if(!defined('SLACK_ENDPOINT')) return;
 
@@ -36,7 +36,7 @@ function postMessage()
 	$result = false;
 
 	$data = json_encode(array(
-		"channel"       =>  SLACK_CHANNEL,
+		"channel"       =>  (isset($argv) && count($argv) > 1 ? '#' . $argv[1] : SLACK_CHANNEL), // Rudimentary support for setting channel when running script. You need to omit the # char!
 		"username"      =>  SLACK_BOT_NAME,
 		"text"          =>  $message,
 		"icon_emoji"    =>  $icons[array_rand($icons)]
