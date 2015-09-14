@@ -12,7 +12,7 @@ function sweden_skövde_alpina()
 	$output           = array();
 
 	if(count($mealDescriptions)) {
-		$output['restaurant_name'] = 'Restaurang Alpina';
+		$output['name'] = 'Alpina';
 
 		foreach ($mealDescriptions as $mealDescription) {
 			$trimmedFood = trim($mealDescription->textContent);

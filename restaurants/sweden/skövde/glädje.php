@@ -15,7 +15,7 @@ function sweden_skövde_glädje()
 	if(count($mealTitles)) {
 		$ix = 0;
 
-		$output['restaurant_name'] = "Restaurang Glädje";
+		$output['name'] = "Restaurang Glädje";
 
 		foreach($mealTitles as $title) {
 			$output['meals'][] = array(

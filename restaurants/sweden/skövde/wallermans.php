@@ -41,7 +41,7 @@ function sweden_skövde_wallermans()
 	);
 
 	if(count($mealDays)) {
-		$output['restaurant_name'] = 'Restaurang Wallermans';
+		$output['name'] = 'Restaurang Wallermans';
 		$dayofweek = date('N'); // ISO-8601 numeric representation of the day of the week
 		$mealsToday = $mealDays->eq($dayofweek - 1);
 		$continueReduce = true; // Once this is flipped, the reduce function always returns false

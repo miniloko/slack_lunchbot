@@ -1,104 +1,74 @@
-#!/usr/bin/php
 <?php
-require_once 'config.php';
-require_once 'crawl.php';
 
-if(!defined('SLACK_ENDPOINT')) return;
+define('DS', DIRECTORY_SEPARATOR);
+define('ROOT', __DIR__.DS);
 
-echo postMessage() ."\n";
-
-// CODE! :D
-
-function postMessage()
+function lunchbot_include($file_path)
 {
-	$slackEndpoint = SLACK_ENDPOINT;
-
-	$icons = array(
-		':hamburger:',
-		':pizza:',
-		':curry:',
-		':spaghetti:',
-		':meat_on_bone:',
-		':sushi:',
-		':poultry_leg:',
-		':ramen:',
-		':fries:',
-		':bread:'
-	);
-	$restaurants = crawl();
-
-	if (count($restaurants) === 0) {
-		return 'Bot response: No restaurant results from crawler';
+	if (file_exists($file_path))
+	{
+		require_once ROOT.$file_path;
+		return true;
 	}
 
-	$message = buildMessageText($restaurants);
-
-	$result = false;
-
-	$data = json_encode(array(
-		"channel"       =>  (isset($argv) && count($argv) > 1 ? '#' . $argv[1] : SLACK_CHANNEL), // Rudimentary support for setting channel when running script. You need to omit the # char!
-		"username"      =>  SLACK_BOT_NAME,
-		"text"          =>  $message,
-		"icon_emoji"    =>  $icons[array_rand($icons)]
-	), JSON_UNESCAPED_UNICODE);
-
-	if(!defined('DEBUG_LOCAL') || (constant('DEBUG_LOCAL') === false)) {
-		$ch = curl_init($slackEndpoint);
-		curl_setopt_array($ch, array(
-			CURLOPT_CUSTOMREQUEST => "POST",
-			CURLOPT_HTTPHEADER => array('Content-Type:application/json'),
-			CURLOPT_POSTFIELDS => $data,
-			CURLOPT_RETURNTRANSFER => true
-		));
-		$result = curl_exec($ch);
-		curl_close($ch);
-	} else {
-		$result = 'Local enabled. No Slack request sent';
-		error_log($message);
-	}
-
-	return 'Slack response: '. ($result ? $result : 'No response from Slack');
+	return false;
 }
 
-function buildMessageText($restaurants, $showWelcome = true)
+function lunchbot_init()
 {
-	$output = '';
-	$eaters = explode(',', FORMAT_EATERS);
+	lunchbot_include('crawl.php');
+	lunchbot_include('restaurant.php');
+	lunchbot_include('settings.php');
+	lunchbot_include('slack.php');
 
-	$welcomeTexts = array(
-		'Are you feeling Hungary?',
-		'お腹hあすきましたか？',
-		'I wonder what ' . $eaters[array_rand($eaters)] . ' would eat... Anyway,',
-		'LUNCHTIME!',
-		'Time for some face-stuffing!',
-	);
+	try
+	{
+		$restaurants = restaurant_get();
 
-	if($showWelcome) {
-		$output = "*" . $welcomeTexts[array_rand($welcomeTexts)] . "*\n\n";
-		$output .= "_Here's what's available today:_\n\n";
-	}
+		if (empty($restaurants))
+			throw new Exception('No restaurants found.');
 
-	foreach ($restaurants as $restaurant) {
-		$output .= formatRestaurant($restaurant);
-		$output .= "\n";
-	}
+		$messages = [];
 
-	return $output;
-}
-
-function formatRestaurant($restaurant = array())
-{
-	$output = "~— *{$restaurant['restaurant_name']}* —~\n";
-
-	foreach ($restaurant['meals'] as $meal) {
-
-		if(isset($meal['description']))
+		if ($greeting = getSetting('greeting'))
 		{
-			$output .= FORMAT_LUNCH_BULLET .' '. str_replace(array("\r", "\n"), '', trim(strip_tags($meal['description'])));
+			if (is_array($greeting))
+				$greeting = $greeting[array_rand($greeting)];
+
+			$messages[] = sprintf('```%s```', trim($greeting));
+			$messages[] = "Here's what's available today:";
 		}
 
-		$output .= "\n";
-	}
+		foreach ($restaurants as $restaurant)
+		{
+			$messages[] = restaurant_format($restaurant);
+		}
 
-	return $output;
+		$message = implode("\n", $messages);
+
+		lunchbot_post($message);
+	}
+	catch (Exception $e)
+	{
+		echo sprintf('Bot response: %s', $e->getMessage())."\n";
+		exit;
+	}
 }
+
+function lunchbot_post($message)
+{
+	if (!getSetting('debug'))
+	{
+		$response = slack_post($message);
+
+		if (!$response)
+			throw new Exception('No response from Slack.');
+	}
+	else
+	{
+		echo sprintf("BOT: \n%s\n", $message);
+		return true;
+	}
+}
+
+lunchbot_init();

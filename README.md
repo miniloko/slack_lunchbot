@@ -1,8 +1,8 @@
 # Installation
 
 1. Install the [Composer](https://getcomposer.org/) dependencies
-2. Copy `sample.config.php` to `config.php`
-3. Set up an [Incoming Webhooks integration](https://api.slack.com/incoming-webhooks) and add the URL to your `SLACK_ENDPOINT` in `config.php`
+2. Copy `settings.sample.php` to `settings.php`
+3. Set up an [Incoming Webhooks integration](https://api.slack.com/incoming-webhooks) and add the URL to your `slack_endpoint` in `settings.cfg` and set the appropriate `slack_channel` to post in.
 
 # Setting up your own restaurant
 
@@ -13,7 +13,7 @@
 
 ```php
    array(
-      'restaurant_name' => $name,
+      'name' => $name,
       'meals' => array(
          array(
             'description' => $meal_description_1

@@ -11,7 +11,7 @@ function sweden_skövde_vallegrillen()
 	$output           = array();
 
 	if(count($mealDescriptions)) {
-		$output['restaurant_name'] = 'Vallegrillen';
+		$output['name'] = 'Vallegrillen';
 		$ix = 0;
 		$dayofweek = date('N'); // ISO-8601 numeric representation of the day of the week
 		$descriptions = $mealDescriptions->eq($dayofweek - 1)->filter('li');

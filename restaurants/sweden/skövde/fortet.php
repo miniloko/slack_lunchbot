@@ -3,7 +3,7 @@
 function sweden_skövde_fortet()
 {
 	$output     = array(
-		'restaurant_name' => 'Fortet',
+		'name' => 'Fortet',
 		'meals' => array()
 		);
 
