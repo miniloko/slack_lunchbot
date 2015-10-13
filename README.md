@@ -1,7 +1,7 @@
 # Installation
 
 1. Install the [Composer](https://getcomposer.org/) dependencies
-2. Copy `settings.sample.php` to `settings.php`
+2. Copy `settings.sample.cfg` to `settings.cfg`
 3. Set up an [Incoming Webhooks integration](https://api.slack.com/incoming-webhooks) and add the URL to your `slack_endpoint` in `settings.cfg` and set the appropriate `slack_channel` to post in.
 
 # Setting up your own restaurant
