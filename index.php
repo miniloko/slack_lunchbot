@@ -23,6 +23,13 @@ function lunchbot_init()
 
 	try
 	{
+		// Find allowed timezones here:
+		// http://php.net/manual/en/timezones.php
+		$timezone = getSetting('timezone');
+		if (!$timezone)
+			$timezone = 'UTC';
+		date_default_timezone_set($timezone);
+
 		$restaurants = restaurant_get();
 
 		if (empty($restaurants))
