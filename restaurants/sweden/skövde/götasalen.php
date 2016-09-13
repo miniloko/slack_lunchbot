@@ -2,7 +2,7 @@
 
 function sweden_skövde_götasalen()
 {
-	// Göta salen
+	// Götasalen
 	// ---------------------
 
 	$client           = getClient();
@@ -11,7 +11,7 @@ function sweden_skövde_götasalen()
 	$output           = array();
 
 	if(count($mealDescriptions)) {
-		$output['name'] = 'Göta salen';
+		$output['name'] = 'Götasalen';
 		$ix = 0;
 		$dayofweek = date('N'); // ISO-8601 numeric representation of the day of the week
 
